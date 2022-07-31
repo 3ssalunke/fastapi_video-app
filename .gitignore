@@ -1,0 +1,9 @@
+app/connect_bundle
+Lib
+Scripts
+pyvenv.cfg
+**/__pycache__
+.env
+**/.pytest_cache
+etc
+share
