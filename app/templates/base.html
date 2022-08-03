@@ -8,5 +8,11 @@
   </head>
   <body>
     {% block content %} {% endblock %}
+    <script>
+      let tag = document.createElement("script")
+      tag.src = "https://www.youtube.com/iframe_api"
+      let firstScriptElement = document.getElementsByTagName("script")[0]
+      firstScriptElement.parentNode.insertBefore(tag, firstScriptElement)
+    </script>
   </body>
 </html>

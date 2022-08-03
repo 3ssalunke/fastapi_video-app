@@ -5,6 +5,7 @@ from app import config
 from .models import User
 
 secret_key = config.get_settings().secret_key
+session_duration = config.get_settings().session_duration
 algo = config.get_settings().jwt_algo
 
 
@@ -26,7 +27,7 @@ def authenticate(email, password):
     return user_obj
 
 
-def login(user_obj, expires=60):
+def login(user_obj, expires=session_duration):
     raw_data = {
         "user_id": f"{user_obj.user_id}",
         "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=expires)

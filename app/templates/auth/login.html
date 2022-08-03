@@ -1,12 +1,14 @@
-{% extends "base.html" %} {% block content %} {% include
-'snippets/form_errors.html' %} {% if logged_in %}
-<p>You are successfully logged in</p>
-{% else %}
-
+<!-- prettier-ignore -->
+{% extends "base.html" %} 
+{% block content %}
 <div class="row">
   <div class="col-md-4 text-center mx-auto">
     <h1>Login</h1>
-
+    <!-- prettier-ignore -->
+    {% include 'snippets/form_errors.html' %} 
+    {% if logged_in %}
+    <p>You are successfully logged in</p>
+    {% else %}
     <form method="POST">
       <div>
         <label for="email">Email</label>
@@ -29,6 +31,7 @@
       </div>
       <button class="btn btn-primary mt-2" type="submit">Login</button>
     </form>
+    {% endif %}
   </div>
 </div>
-{% endif %} {% endblock %}
+{% endblock %}

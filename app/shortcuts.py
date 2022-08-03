@@ -1,10 +1,26 @@
-from app import config
+from cassandra.cqlengine.query import DoesNotExist, MultipleObjectsReturned
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+from app import config
 
 
 settings = config.get_settings()
 templates = Jinja2Templates(directory=str(settings.templates_dir))
+
+
+def get_object_or_404(Classname, **kwargs):
+    video_obj = None
+    try:
+        video_obj = Classname.objects.get(**kwargs)
+    except DoesNotExist:
+        raise StarletteHTTPException(status_code=404)
+    except MultipleObjectsReturned:
+        raise StarletteHTTPException(status_code=400)
+    except:
+        raise StarletteHTTPException(status_code=500)
+    return video_obj
 
 
 def redirect(path, cookies: dict = {}, remove_session=False):
