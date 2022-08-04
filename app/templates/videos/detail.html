@@ -2,7 +2,7 @@
 {% block content %}
 {{host_id}} 
 {{object}}
-<div id='yt-video' data-video-id="{{ host_id }}" data-start-time='0'></div>
+<div id='yt-video' data-video-id="{{ host_id }}" data-start-time="{{start_time}}"></div>
 <div><code>{{ object.render() }}</code></div>
 
 <script>
@@ -81,9 +81,14 @@
     }
 
     function storeWatchEvent(){
+        var duration = player.getDuration()
         var data = {
-            currentTime: currentTime,
-            videoId: videoId
+            end_time: currentTime,
+            start_time: initialStartTime,
+            duration,
+            host_id: videoId,
+            complete: (duration * 0.98) < currentTime,
+            path: window.location.pathname
         }
         timeSinceLastSaved = 0;
         // console.log('saving...', data)
@@ -94,10 +99,10 @@
             },
             body: JSON.stringify(data)
         }
-        fetch("/watch-event", reqOptions)
+        fetch("/api/events/watch", reqOptions)
             .then(res => res.json())
             .then(data => {
-                console.log(data)
+                // console.log(data)
             })
             .catch(err => console.error(err))
     }

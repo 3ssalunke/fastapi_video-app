@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse
 from app import utils
 from app.shortcuts import get_object_or_404, redirect, render
 from app.users.decorators import login_required
-
+from app.watch_events.models import WatchEvent
 from .models import Video
 from .schemas import VideoCreateSchema
 
@@ -53,8 +53,11 @@ def video_list_view(request: Request):
 @router.get("/{host_id}", response_class=HTMLResponse)
 def video_detail_view(request: Request, host_id: str):
     video_obj = get_object_or_404(Video, host_id=host_id)
+    start_time = WatchEvent.get_resume_time(
+        host_id, request.user.username) if request.user.is_authenticated else 0
     context = {
         "host_id": host_id,
-        "object": video_obj
+        "object": video_obj,
+        "start_time": start_time
     }
     return render(request, "videos/detail.html", context)

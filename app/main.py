@@ -14,12 +14,15 @@ from .users.decorators import login_required
 from .users.auth import create_user
 from .users.models import User
 from .users.schemas import UserLoginSchema, UserSignupSchema
-
 from .videos.models import Video
-
+from .videos.routers import router as video_router
+from .watch_events.models import WatchEvent
+from .watch_events.routers import router as watch_event_router
 
 app = FastAPI()
 app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
+app.include_router(video_router)
+app.include_router(watch_event_router)
 DB_SESSION = None
 
 from .handlers import *  # nopep8
@@ -31,6 +34,7 @@ def on_startup():
     DB_SESSION = db.get_session()
     sync_table(User)
     sync_table(Video)
+    sync_table(WatchEvent)
 
 
 @app.get("/", response_class=HTMLResponse)
