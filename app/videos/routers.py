@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Form, Request
+from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse
 
 from app import utils
-from app.shortcuts import get_object_or_404, redirect, render
+from app.shortcuts import get_object_or_404, redirect, render, is_htmx
 from app.users.decorators import login_required
 from app.watch_events.models import WatchEvent
 from .models import Video
@@ -15,13 +15,15 @@ router = APIRouter(
 
 @router.get("/create", response_class=HTMLResponse)
 @login_required
-def video_create_view(request: Request):
+def video_create_view(request: Request, is_htmx=Depends(is_htmx)):
+    if is_htmx:
+        return render(request, "videos/htmx/create.html", {})
     return render(request, "videos/create.html", {})
 
 
 @router.post("/create", response_class=HTMLResponse)
 @login_required
-def video_create_post_view(request: Request, url: str = Form(...), title: str = Form(...)):
+def video_create_post_view(request: Request, url: str = Form(...), title: str = Form(...), is_htmx=Depends(is_htmx)):
     raw_data = {
         "url": url,
         "title": title,
@@ -35,9 +37,14 @@ def video_create_post_view(request: Request, url: str = Form(...), title: str = 
         "url": url,
         "title": title,
     }
+    redirect_path = data.get("path") or "/videos/create"
+    if is_htmx:
+        if len(errors) > 0:
+            return render(request, "videos/htmx/create.html", context)
+        context = {"path": redirect_path, "title": data.get("title")}
+        return render(request, "videos/htmx/link.html", context)
     if len(errors) > 0:
         return render(request, "videos/create.html", context, status_code=400)
-    redirect_path = data.get("path") or "/videos/create"
     return redirect(redirect_path)
 
 

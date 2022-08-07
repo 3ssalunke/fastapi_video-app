@@ -2,6 +2,7 @@ import uuid
 from app.config import get_settings
 from cassandra.cqlengine import columns
 from cassandra.cqlengine.models import Model
+from cassandra.cqlengine.query import DoesNotExist, MultipleObjectsReturned
 
 from app.users.exceptions import InvalidUserIdException
 from app.users.models import User
@@ -29,7 +30,7 @@ class Video(Model):
         return f"Video(title={self.title}, host_id={self.host_id}, host_service={self.host_service})"
 
     def as_data(self):
-        return {f"{self.host_service}_id": self.host_id, "path": self.path}
+        return {f"{self.host_service}_id": self.host_id, "path": self.path, "title": self.title}
 
     def render(self):
         basename = self.host_service
@@ -41,6 +42,23 @@ class Video(Model):
     @property
     def path(self):
         return f"/videos/{self.host_id}"
+
+    @staticmethod
+    def get_or_create_video(url, user_id=None, **kwargs):
+        host_id = extract_video_id(url)
+        obj = None
+        created = False
+        try:
+            obj = Video.objects.get(host_id=host_id)
+        except MultipleObjectsReturned:
+            q = Video.objects.allow_filtering().filter(host_id=host_id)
+            obj = q.first()
+        except DoesNotExist:
+            obj = Video.add_video(url, user_id, **kwargs)
+            created = True
+        except:
+            raise Exception("Invalid Exception")
+        return obj, created
 
     @staticmethod
     def add_video(url, user_id=None, title=None):

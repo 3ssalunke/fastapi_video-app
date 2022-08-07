@@ -8,6 +8,8 @@ from pydantic.error_wrappers import ValidationError
 from starlette.middleware.authentication import AuthenticationMiddleware
 
 from . import db, utils
+from .playlists.models import Playlist
+from .playlists.routers import router as playlist_router
 from .shortcuts import redirect, render
 from .users.backends import JWTCookieBackend
 from .users.decorators import login_required
@@ -23,6 +25,7 @@ app = FastAPI()
 app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
 app.include_router(video_router)
 app.include_router(watch_event_router)
+app.include_router(playlist_router)
 DB_SESSION = None
 
 from .handlers import *  # nopep8
@@ -32,6 +35,7 @@ from .handlers import *  # nopep8
 def on_startup():
     global DB_SESSION
     DB_SESSION = db.get_session()
+    sync_table(Playlist)
     sync_table(User)
     sync_table(Video)
     sync_table(WatchEvent)

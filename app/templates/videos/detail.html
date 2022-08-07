@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-{{host_id}} 
-{{object}}
+{% if object.title %}<h1>{{object.title}}</h1>{% endif %}
 <div id='yt-video' data-video-id="{{ host_id }}" data-start-time="{{start_time}}"></div>
-<div><code>{{ object.render() }}</code></div>
+<!-- <div><code>{{ object.render() }}</code></div> -->
 
 <script>
     var youtubeVideoDiv = document.getElementById('yt-video')

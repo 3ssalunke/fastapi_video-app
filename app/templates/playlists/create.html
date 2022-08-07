@@ -3,21 +3,9 @@
 {% block content %}
 <div class="row">
   <div class="col-md-4 text-center mx-auto">
-    <h1>Add Video</h1>
+    <h1>Add Playlist</h1>
     {% include 'snippets/form_errors.html' %}
     <form method="POST">
-      <div>
-        <label for="url">YouTube Video Link</label>
-        <input
-          class="form-control"
-          type="text"
-          name="url"
-          id="url"
-          placeholder="https://www.youtube.com/watch?v=KQ-u4RcFLBY"
-          value="{% if url %}{{url}}{% endif %}"
-          required
-        />
-      </div>
       <div>
         <label for="title">Video Title</label>
         <input
@@ -27,10 +15,9 @@
           id="title"
           placeholder="title"
           value="{% if title %}{{title}}{% endif %}"
-          required
         />
       </div>
-      <button class="btn btn-primary mt-2" type="submit">Add Video</button>
+      <button class="btn btn-primary mt-2" type="submit">Add</button>
     </form>
   </div>
 </div>

@@ -1,0 +1,30 @@
+<div class="row">
+  {% include 'snippets/form_errors.html' %}
+  <form method="POST" action="/videos/create" hx-post="/videos/create">
+    <div>
+      <label for="url">YouTube Video Link</label>
+      <input
+        class="form-control"
+        type="text"
+        name="url"
+        id="url"
+        placeholder="https://www.youtube.com/watch?v=KQ-u4RcFLBY"
+        value="{% if url %}{{url}}{% endif %}"
+        required
+      />
+    </div>
+    <div>
+      <label for="title">Video Title</label>
+      <input
+        class="form-control"
+        type="text"
+        name="title"
+        id="title"
+        placeholder="title"
+        value="{% if title %}{{title}}{% endif %}"
+        required
+      />
+    </div>
+    <button class="btn btn-primary mt-2" type="submit">Add Video</button>
+  </form>
+</div>

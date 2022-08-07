@@ -1,11 +1,6 @@
-<!-- prettier-ignore -->
-{% extends "base.html" %}
-{% block content %}
 <div class="row">
-  <div class="col-md-4 text-center mx-auto">
-    <h1>Add Video</h1>
     {% include 'snippets/form_errors.html' %}
-    <form method="POST">
+    <form method="POST" action="/playlists/{{db_id}}/add-video" hx-post="/playlists/{{db_id}}/add-video">
       <div>
         <label for="url">YouTube Video Link</label>
         <input
@@ -33,5 +28,3 @@
       <button class="btn btn-primary mt-2" type="submit">Add Video</button>
     </form>
   </div>
-</div>
-{% endblock %}
