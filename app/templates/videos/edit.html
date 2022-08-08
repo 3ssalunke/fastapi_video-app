@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+{% if object.title %}
+<h1>Edit {% if object.title %}{{object.title}} {% else %} {{object.host_id}} {% endif %}</h1>
+{% endif %}
+{% with video=object %}
+{% include 'videos/htmx/edit.html' %}
+{% endwith %}
+{% endblock %}

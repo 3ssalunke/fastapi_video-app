@@ -28,7 +28,6 @@ class WatchEvent(Model):
         resume_time = 0
         obj = WatchEvent.objects.allow_filtering().filter(
             host_id=host_id, user_id=user_id).first()
-        print(obj)
         if obj is not None:
             if not obj.complete or not obj.completed:
                 resume_time = obj.end_time
